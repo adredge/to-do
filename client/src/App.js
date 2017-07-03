@@ -1,15 +1,24 @@
 import React, { Component } from 'react';
+import Client from "./Client";
 import './App.css';
 
 class App extends Component {
   state = {
-    lists: [{name: "List 1", id: 1}, {name: "List 2", id: 2}]
+    lists: [{name: "List Zero", id: 0}]
+  };
+
+  handleListLoad = () => {
+    Client.getLists("userId", (lists) => {
+      this.setState({
+        lists: lists
+      })
+    });
   };
 
   render() {
 
     const listNameItems = this.state.lists.map(list => (
-      <li>{list.name}</li>
+      <li key={list.id}>{list.name}</li>
     ));
 
     return (
@@ -18,11 +27,11 @@ class App extends Component {
           <h2>Your lists</h2>
         </div>
         <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+            Click <button onClick={this.handleListLoad}>here</button> to get started.
         </p>
-      <ul>
+        <ul>
         {listNameItems}
-      </ul>
+        </ul>
       </div>
     );
   }
