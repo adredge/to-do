@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Client from "./Client";
-import './App.css';
+import styles from './App.css';
 
 class App extends Component {
   state = {
