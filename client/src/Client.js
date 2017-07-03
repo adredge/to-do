@@ -1,11 +1,9 @@
-function getLists(userId, cb){
-    console.log('fetch');
-    return fetch(`/api/lists/${userId}`)
+function getList(userId, cb){
+    return fetch(`/api/list/${userId}`)
         .then(res => {
             return res.json();
         })
-        .then(cb)
 }
 
-const Client = {getLists };
+const Client = {getList };
 export default Client;

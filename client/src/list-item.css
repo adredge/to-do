@@ -1,0 +1,11 @@
+.item {
+    background-color: #D3D3D3;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.listCheckbox {
+    margin-right: 15px;
+    transform: scale(1.7, 1.7);
+}

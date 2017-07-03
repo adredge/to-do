@@ -8,11 +8,8 @@ class App extends Component {
     return (
       <div className="app">
         <div className="appHeader">
-          <h2>Your lists</h2>
+          <h1>Tasks</h1>
         </div>
-        <p className="appIntro">
-            Click <button onClick={this.handleListLoad}>here</button> to get started.
-        </p>
         <div className="appBody">
             <ToDoList />
         </div>

@@ -12,23 +12,22 @@ class ToDoList extends Component {
     }
 
     componentWillMount() {
-        console.log('here!')
-        Client.getLists("userId", (lists) => {
-            console.log('got it ', lists)
+        Client.getList("userId")
+        .then((lists) => {
             this.setState({
-                lists: lists
+                lists
             })
         });
     };
 
     renderListItems = () => {
-        return this.state.lists.map(list => return <ListItem item={list} />)
+        return this.state.lists.map(list => <ListItem key={list.id} item={list} />)
     }
-//ListItem
+
     render() {
         return (
-            <ul>
-                {this.renderListItems}
+            <ul className="list">
+                {this.renderListItems()}
             </ul>
         );
     }
