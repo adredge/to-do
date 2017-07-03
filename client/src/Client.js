@@ -1,4 +1,5 @@
 function getLists(userId, cb){
+    console.log('fetch');
     return fetch(`/api/lists/${userId}`)
         .then(res => {
             return res.json();
