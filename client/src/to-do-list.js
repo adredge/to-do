@@ -7,21 +7,21 @@ class ToDoList extends Component {
     constructor(props){
         super(props);
         this.state = {
-            lists: []
+            list: []
         };
     }
 
     componentWillMount() {
         Client.getList("userId")
-        .then((lists) => {
+        .then((list) => {
             this.setState({
-                lists
+                list
             })
         });
     };
 
     renderListItems = () => {
-        return this.state.lists.map(list => <ListItem key={list.id} item={list} />)
+        return this.state.list.map(item => <ListItem key={item.id} item={item} />)
     }
 
     render() {

@@ -16,6 +16,15 @@ class ListItem extends Component {
     handleCheck = () => {
         console.log('handle check: ', this.state.itemId)
     }
+
+    renderCompletedDetails = (item) => {
+        if(item.complete) {
+            return (<div className="completedAt">
+                        Completed {item.completedAt}
+                    </div>)
+        }
+        return;
+    }
     
     render() {
 
@@ -23,12 +32,19 @@ class ListItem extends Component {
 
         return (
             <li className="item" {...this.props.children}>
-                <input type="checkbox" 
-                    className="listCheckbox"
-                    name={item.id} 
-                    checked={item.complete} 
-                    onChange={this.handleCheck}/>
-                {item.name}
+                <div className="itemContent">
+                    <input type="checkbox" 
+                        className="listCheckbox"
+                        name={item.id} 
+                        checked={item.complete} 
+                        onChange={this.handleCheck}/>
+                    <div className="displayText">
+                        <div>
+                            {item.name}
+                        </div>
+                        {this.renderCompletedDetails(item)}
+                    </div>
+                </div>
             </li>
         );
     }

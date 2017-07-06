@@ -3,9 +3,31 @@
     padding: 15px;
     margin-bottom: 10px;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 31px;
+}
+
+.itemContent{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .listCheckbox {
     margin-right: 15px;
     transform: scale(1.7, 1.7);
+}
+
+.displayText{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.completedAt {
+    font-style: italic;
+    font-size: .5em;
+    
 }
