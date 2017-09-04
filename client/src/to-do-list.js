@@ -14,7 +14,6 @@ class ToDoList extends Component {
     componentWillMount() {
         Client.getList("userId")
         .then((list) => {
-            console.log('response', list)
             this.setState({
                 list
             })
@@ -22,8 +21,7 @@ class ToDoList extends Component {
     };
 
     renderListItems = () => {
-        console.log('list', this.state.list)
-        return this.state.list.map(item => <ListItem key={item._id} item={item} />)
+        return this.state.list.map(item => <ListItem key={item.id} item={item} />)
     }
 
     render() {
