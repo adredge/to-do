@@ -1,10 +1,9 @@
 const mongoose = require('mongoose')
 const toDoListModel = require('../../to-do-list/schema')
 
-module.exports = function(url) {
-    mongoose.connect(url)
+module.exports = function(config, env) {
+    mongoose.connect(config.db)
     var db = mongoose.connection
-    var db = mongoose.connection; 
     db.on('error', function (err) {
         console.log('connection error...', err);
     });
@@ -12,5 +11,6 @@ module.exports = function(url) {
         console.log('connected to todo database.');
     });
 
-    toDoListModel.createDefaultList()
+    if(env == 'development')
+        toDoListModel.createDefaultList(config.defaultUserId)
 };

@@ -12,11 +12,10 @@ class ToDoList extends Component {
     }
 
     componentWillMount() {
-        Client.getList("userId")
+        Client.getList('test-user')
         .then((list) => {
-            console.log('response', list)
             this.setState({
-                list
+                list: list.items
             })
         });
     };

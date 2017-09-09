@@ -15,7 +15,9 @@
     "concurrently": "^3.5.0"
   },
   "dependencies": {
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "mongoose": "^4.11.10"
+    "mongoose": "^4.11.10",
+    "uuid": "^3.1.0"
   }
 }
