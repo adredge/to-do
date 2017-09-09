@@ -23,4 +23,12 @@ router.post('/uncheckItem', wrap((req,res) => {
   return toDoListFacade.uncheckItem(itemId).then(() => res.status(200).end())
 }));
 
+router.post('/addItem', (req, res) => {
+  return toDoListFacade.addItem(req.body).then(vm => res.json(vm))
+});
+
+router.post('/removeItem', (req, res) => {
+  return toDoListFacade.removeItem(req.body).then(vm => res.json(vm))
+});
+
 module.exports = router

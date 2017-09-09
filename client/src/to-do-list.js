@@ -7,7 +7,11 @@ class ToDoList extends Component {
     constructor(props){
         super(props);
         this.state = {
-            list: []
+            list: {
+                _id: "",
+                items: []
+            },
+            addItemName: ""
         };
     }
 
@@ -15,21 +19,57 @@ class ToDoList extends Component {
         Client.getList('test-user')
         .then((list) => {
             this.setState({
-                list: list.items
+                list: list
             })
         });
     };
 
     renderListItems = () => {
-        console.log('list', this.state.list)
-        return this.state.list.map(item => <ListItem key={item._id} item={item} />)
+        return this.state.list.items.map(item => <ListItem key={item._id} item={item} removeItem={this.removeItem}/>)
+    }
+
+    removeItem = (itemId) => {
+        Client.removeItem(this.state.list._id, itemId, 'test-user')
+        .then(list => {
+            this.setState({
+                list: list
+            })
+        })
+    }
+
+
+    addItem = () => {
+        Client.addItem('test-user', this.state.list._id, this.state.addItemName)
+        .then(list => {
+            this.setState({
+                list: list,
+                addItemName: ""
+            })
+        });
+
+    }
+
+    handleChange = (event) => {
+        this.setState({addItemName: event.target.value});
+    }
+
+    onKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            this.addItem()
+        }
     }
 
     render() {
         return (
-            <ul className="list">
-                {this.renderListItems()}
-            </ul>
+            <div>
+                <ul className="list">
+                    {this.renderListItems()}
+                </ul>
+                <div>
+                    <input type="text" name="add-item" placeholder="Add item..." value={this.state.addItemName} onChange={this.handleChange} onKeyPress={this.onKeyPress}/>
+                    <button onClick={this.addItem}>Add</button>
+                </div>
+            </div>
         );
     }
 }

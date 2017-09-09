@@ -7,35 +7,28 @@ function getList(userId, cb){
         })
 }
 
-// exports.createUserBookmark = function (contentId) {
-//   return (dispatch) => {
-//     return axios.post(apiRoutes.userBookmarksOld, {contentId})
-//       .then(() => dispatch(exports.fetchUserBookmarks()))
-//   }
-// }
+function addItem(userId, listId, newItemName){
+    var data = {userId, listId, newItemName}
+    return axios.post('api/addItem', data).then(res => {
+        console.log('resolved', res)
+        return res.data})
+}
+
+function removeItem(listId, itemId, userId){
+    var data = {listId, itemId, userId}
+    return axios.post('api/removeItem', data).then(res => {
+        console.log('resolved', res)
+        return res.data})
+}
 
 function checkItem(itemId, completedAt){
-    // var data = {itemId, completedAt}
-    // return fetch(`/api/checkItem/`,
-    // {
-    //     method: "POST",
-    //     body: JSON.stringify(data)
-    // })
-    let data = {itemId, completedAt}
-    console.log('data', data)
+    var data = {itemId, completedAt}
     return axios.post('api/checkItem', data)
-    // .then(response => console.log('response', response))
 }
 
 function uncheckItem(itemId){
-    // return fetch(`/api/uncheckItem/`,
-    // {
-    //     method: "POST",
-    //     body: JSON.stringify({itemId})
-    // })
     return axios.post('api/uncheckItem', {itemId})
-    // .then(response => console.log('response', response))
 }
 
-const Client = {getList, checkItem, uncheckItem };
+const Client = {getList, checkItem, uncheckItem, addItem, removeItem };
 export default Client;

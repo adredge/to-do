@@ -13,5 +13,13 @@ module.exports = {
 
   uncheckItem(itemId) {
     return toDoListRepository.uncheckItem(itemId)
+  },
+
+  addItem(addItemDetails) {
+    return toDoListRepository.addItem(addItemDetails.userId, addItemDetails.listId, addItemDetails.newItemName)
+  },
+
+  removeItem(removeItemDetails) {
+    return toDoListRepository.removeItem(removeItemDetails.itemId, removeItemDetails.listId, removeItemDetails.userId)
   }
 }

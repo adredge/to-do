@@ -6,7 +6,7 @@ class ListItem extends Component {
     constructor(props){
         super(props);
         this.state = {
-            item: props.item
+            item: props.item,
         };
     }
 
@@ -37,6 +37,10 @@ class ListItem extends Component {
             }
     }
 
+    removeItem = () => {
+        this.props.removeItem(this.state.item._id)
+    }
+    
     renderCompletedDetails = (item) => {
         if(item.complete) {
             return (<div className="completedAt">
@@ -65,6 +69,7 @@ class ListItem extends Component {
                         </div>
                         {this.renderCompletedDetails(item)}
                     </div>
+                    <a href="#" onClick={this.removeItem}>REMOVE</a>
                 </div>
             </li>
         );
