@@ -65,9 +65,9 @@ class ToDoList extends Component {
                 <ul className="list">
                     {this.renderListItems()}
                 </ul>
-                <div>
-                    <input type="text" name="add-item" placeholder="Add item..." value={this.state.addItemName} onChange={this.handleChange} onKeyPress={this.onKeyPress}/>
-                    <button onClick={this.addItem}>Add</button>
+                <div className="add-item">
+                    <input type="text" className="add-item-input" name="add-item-input" placeholder="Add item..." value={this.state.addItemName} onChange={this.handleChange} onKeyPress={this.onKeyPress}/>
+                    <button className="add-item-button" onClick={this.addItem}>Add</button>
                 </div>
             </div>
         );

@@ -16,11 +16,13 @@
 }
 
 .listCheckbox {
+    flex-grow: 1;
     margin-right: 15px;
     transform: scale(1.7, 1.7);
 }
 
 .displayText{
+    flex-grow: 45;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -29,5 +31,11 @@
 .completedAt {
     font-style: italic;
     font-size: .5em;
-    
+}
+
+.removeButton {
+    flex-grow: 1;
+    background: none;
+    border: none;
+    font-size: 15px;
 }

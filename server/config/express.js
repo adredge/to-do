@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser')
-const routes = require("../../routes")
+const routes = require("../routes")
 
 module.exports = function(app, config) {
     app.use(bodyParser.json());

@@ -7,6 +7,7 @@ class ListItem extends Component {
         super(props);
         this.state = {
             item: props.item,
+            showRemoveButton: false
         };
     }
 
@@ -37,10 +38,6 @@ class ListItem extends Component {
             }
     }
 
-    removeItem = () => {
-        this.props.removeItem(this.state.item._id)
-    }
-    
     renderCompletedDetails = (item) => {
         if(item.complete) {
             return (<div className="completedAt">
@@ -50,13 +47,16 @@ class ListItem extends Component {
         }
         return;
     }
+
+    showRemoveButton = () => {this.setState({showRemoveButton: true})}
+    hideRemoveButton = () => {this.setState({showRemoveButton: false})}
     
     render() {
 
         var item = this.state.item;
 
         return (
-            <li className="item" {...this.props.children}>
+            <li className="item" {...this.props.children} onMouseEnter={this.showRemoveButton} onMouseLeave={this.hideRemoveButton}>
                 <div className="itemContent">
                     <input type="checkbox" 
                         className="listCheckbox"
@@ -69,7 +69,7 @@ class ListItem extends Component {
                         </div>
                         {this.renderCompletedDetails(item)}
                     </div>
-                    <a href="#" onClick={this.removeItem}>REMOVE</a>
+                    {this.state.showRemoveButton ? <button className="removeButton" onClick={() => this.props.removeItem(this.state.item._id)}>X</button> : null }
                 </div>
             </li>
         );
