@@ -3,14 +3,27 @@
 const mongoose = require('mongoose')
 const {ToDoList, Item} = require('./schema')
 
-var getList = function(userId) {
+const getList = function(userId) {
     return ToDoList.findOne({'userId':userId}).populate('items').exec((err, toDoList) => {
         if(err) return console.error("ERROR!", err)
         return toDoList
     })
 }
 
-var checkItem = function(itemId, completedAt) {
+const createEmptyList = function(userId, listName){ 
+    let toDoList = new ToDoList(
+                {name: listName, 
+                userId, 
+                items: []
+            })
+            
+            return toDoList.save(function(err, savedList){
+                if(err) return console.error(err)
+                return savedList
+            })
+}
+
+const checkItem = function(itemId, completedAt) {
     return Item.findById(itemId, (err, item) => {
         if (err) return console.error(err)
         if(item === null) return console.error('Unable to find item with id ', itemId)
@@ -23,7 +36,7 @@ var checkItem = function(itemId, completedAt) {
     })
 }
 
-var uncheckItem = function(itemId) {
+const uncheckItem = function(itemId) {
     return Item.findById(itemId, (err, item) => {
         if (err) return console.error(err)
         if(item === null) return console.error('Unable to find item with id ', itemId)
@@ -36,7 +49,7 @@ var uncheckItem = function(itemId) {
     })
 }
 
-var addItem = function(userId, listId, newItemName){
+const addItem = function(userId, listId, newItemName){
     var item = new Item({name: newItemName, complete: false})
 
     return item.save().then(() => {
@@ -86,4 +99,4 @@ var removeItem = function(itemId, listId, userId){
         .catch(err => console.error("ERROR finding list to remove from", err))
 }
 
-module.exports = {getList, checkItem, uncheckItem, addItem, removeItem}
+module.exports = {createEmptyList, getList, checkItem, uncheckItem, addItem, removeItem}

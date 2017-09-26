@@ -4,6 +4,11 @@ module.exports = {
     port: process.env.PORT || 3001,
     defaultUserId: 'test-user'
   },
+  test: {
+    db: 'mongodb://localhost/todo-integration',
+    port: process.env.PORT || 3001,
+    defaultUserId: 'test-user'
+  },
   production: {
     // rootPath: rootPath,
     // db: 'mongodb://jeames:multivision@ds053178.mongolab.com:53178/multivision',
