@@ -8,21 +8,21 @@ function getList(userId, cb){
 }
 
 function addItem(userId, listId, newItemName){
-    let data = {userId, listId, newItemName}
+    const data = {userId, listId, newItemName}
     return axios.post('api/addItem', data).then(res => {
         console.log('resolved', res)
         return res.data})
 }
 
 function removeItem(listId, itemId, userId){
-    let data = {listId, itemId, userId}
+    const data = {listId, itemId, userId}
     return axios.post('api/removeItem', data).then(res => {
         console.log('resolved', res)
         return res.data})
 }
 
 function checkItem(itemId, completedAt){
-    let data = {itemId, completedAt}
+    const data = {itemId, completedAt}
     return axios.post('api/checkItem', data)
 }
 

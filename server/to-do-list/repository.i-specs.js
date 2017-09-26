@@ -1,7 +1,10 @@
 'use strict'
 
 const uuid = require('uuid')
+const mongoose = require('mongoose')
+
 const toDoListRepository = require('./repository')
+const {Item} = require('./schema')
 const domainHelper = require('../../test/domain-helpers')
 
 describe('toDoListRepository', () => {
@@ -18,10 +21,9 @@ describe('toDoListRepository', () => {
 
     beforeEach(() => {
       return toDoListRepository.createEmptyList(userId, listName)
-      .then(l => savedList = l)
-      .then(() => toDoListRepository.addItem(userId, savedList._id, itemName))
-      .then(() => toDoListRepository.getList(userId))
-      .then(l => savedList = l)
+        .then(l => savedList = l)
+        .then(() => toDoListRepository.addItem(userId, savedList._id, itemName))
+        .then(l => savedList = l)
     })
 
     afterEach(() => {
@@ -35,7 +37,70 @@ describe('toDoListRepository', () => {
 
     it('should have the item', () => {
         expect(savedList.items.length).to.equal(1)
-        expect(savedList.items[0].name).to.equal("New Item")
+        expect(savedList.items[0].name).to.equal(itemName)
+    })
+  })
+
+  context('when adding multiple items to a todo list', () => {
+    let savedList
+    const listName = "My Test List"
+    const item1Name = "New Item 1"
+    const item2Name = "New Item 2"
+    const item3Name = "New Item 3"
+
+    beforeEach(() => {
+      return toDoListRepository.createEmptyList(userId, listName)
+        .then(l => savedList = l)
+        .then(() => toDoListRepository.addItem(userId, savedList._id, item1Name))
+        .then(() => toDoListRepository.addItem(userId, savedList._id, item2Name))
+        .then(() => toDoListRepository.addItem(userId, savedList._id, item3Name))
+        .then(l => savedList = l)
+    })
+
+    afterEach(() => {
+      return domainHelper.deleteEntireList(userId, savedList._id)
+    })
+
+    it('should have all 3 items in the list', () => {
+      expect(savedList.items.length).to.equal(3)
+    })
+
+    it('should keep the order of the items', () => { 
+        expect(savedList.items[0].name).to.equal(item1Name)
+        expect(savedList.items[1].name).to.equal(item2Name)
+        expect(savedList.items[2].name).to.equal(item3Name)
+    })
+
+    it('should mark items as incomplete by default', () => { 
+        expect(savedList.items[0].complete).to.be.false
+        expect(savedList.items[1].complete).to.be.false
+        expect(savedList.items[2].complete).to.be.false
+    })
+  })
+
+  context('when adding an item to a todo list that does not exist', () => {
+    let savedList
+    const listId = mongoose.Types.ObjectId()
+    const itemName = "New Item 1"
+
+    beforeEach(() => {
+      return toDoListRepository.addItem(userId, listId, itemName)
+        .then(l => savedList = l)
+    })
+
+    afterEach(() => {
+    //   return domainHelper.deleteEntireList(userId, savedList._id)
+    })
+
+    it('should NOT save a list', () => {
+        expect(savedList).to.eql({})
+    })
+
+    it('should NOT save the item', () => {
+        return Item.findOne({'name':itemName}).then(item => {
+            console.log('here. item', item)
+            expect(item).to.be.null
+        })
     })
   })
 

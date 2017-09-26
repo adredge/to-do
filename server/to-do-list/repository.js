@@ -11,7 +11,7 @@ const getList = function(userId) {
 }
 
 const createEmptyList = function(userId, listName){ 
-    let toDoList = new ToDoList(
+    const toDoList = new ToDoList(
                 {name: listName, 
                 userId, 
                 items: []
@@ -23,80 +23,78 @@ const createEmptyList = function(userId, listName){
             })
 }
 
-const checkItem = function(itemId, completedAt) {
-    return Item.findById(itemId, (err, item) => {
-        if (err) return console.error(err)
-        if(item === null) return console.error('Unable to find item with id ', itemId)
-  
-        item.set({ complete: true, completedAt });
-        item.save(function (err, updatedItem) {
-            if (err) return console.error(err)
-            return updatedItem
-        })
-    })
-}
-
-const uncheckItem = function(itemId) {
-    return Item.findById(itemId, (err, item) => {
-        if (err) return console.error(err)
-        if(item === null) return console.error('Unable to find item with id ', itemId)
-  
-        item.set({ complete: false, completedAt: null });
-        item.save(function (err, updatedItem) {
-            if (err) return console.error(err)
-            return updatedItem
-        })
-    })
-}
-
 const addItem = function(userId, listId, newItemName){
-    var item = new Item({name: newItemName, complete: false})
+    const item = new Item({name: newItemName, complete: false})
 
-    return item.save().then(() => {
-        return ToDoList.findOne({'userId':userId, '_id':listId}).then(toDoList => {
-            if(!toDoList) {
-                console.log("Unable to find list to add to")
-                return {}
-            }
+    return ToDoList.findOne({'userId':userId, '_id':listId}).then(toDoList => {
+        if(!toDoList) {
+            return {}
+        }
+        return item.save().then(() => {
             toDoList.items.push(item._id)
 
-            return toDoList.save()
-                .then(() => {
-                    return ToDoList.findOne({'userId':userId, '_id':listId}).populate('items')
-                        .then(list => list)
-                        .catch(err => console.error("Error finding list just saved", err))
-                })
-                .catch(err => { console.error("error saving list with new item ref", err)
-                })
+            return toDoList.save().then(() => {
+                return ToDoList.findOne({'userId':userId, '_id':listId}).populate('items')
+                    .then(list => list)
+                    .catch(err => console.error("ERROR finding list just saved", err))
+            })
+            .catch(err => console.error("ERROR saving list with new item ref", err))
         })
-        .catch(err => console.error("ERROR finding list to add to", err))
-    })
-    .catch(err => console.error("error creating new item", err))
+        .catch(err => console.error("ERROR saving item", err))
+    }).catch(err => console.error("ERROR finding list to add item to", err))
 }
 
-var removeItem = function(itemId, listId, userId){
-    return ToDoList.findOne({'_id':listId}).then(toDoList => {
-            if(!toDoList) {
-                console.log("Unable to find list to remove from")
-                return
-            }
-            var itemIndexToRemove = toDoList.items.indexOf(itemId)
-            if (itemIndexToRemove > -1) {
-                toDoList.items.splice(itemIndexToRemove, 1);
-            }
+// const checkItem = function(itemId, completedAt) {
+//     return Item.findById(itemId, (err, item) => {
+//         if (err) return console.error(err)
+//         if(item === null) return console.error('Unable to find item with id ', itemId)
+  
+//         item.set({ complete: true, completedAt });
+//         item.save(function (err, updatedItem) {
+//             if (err) return console.error(err)
+//             return updatedItem
+//         })
+//     })
+// }
 
-            return toDoList.save()
-                .then(() => {
-                    return Item.findByIdAndRemove(itemId).then(() => {
-                        return ToDoList.findOne({'userId':userId, '_id':listId}).populate('items')
-                            .then(list => list)
-                            .catch(err => console.error("Error finding list just saved", err))
-                    })
-                    .catch(err => console.log("error removing item", err))
-                })
-                .catch(err => console.error("error saving list with item removed", err))
-        })
-        .catch(err => console.error("ERROR finding list to remove from", err))
-}
+// const uncheckItem = function(itemId) {
+//     return Item.findById(itemId, (err, item) => {
+//         if (err) return console.error(err)
+//         if(item === null) return console.error('Unable to find item with id ', itemId)
+  
+//         item.set({ complete: false, completedAt: null });
+//         item.save(function (err, updatedItem) {
+//             if (err) return console.error(err)
+//             return updatedItem
+//         })
+//     })
+// }
+
+
+
+// const removeItem = function(itemId, listId, userId){
+//     return ToDoList.findOne({'_id':listId}).then(toDoList => {
+//             if(!toDoList) {
+//                 console.log("Unable to find list to remove from")
+//                 return
+//             }
+//             const itemIndexToRemove = toDoList.items.indexOf(itemId)
+//             if (itemIndexToRemove > -1) {
+//                 toDoList.items.splice(itemIndexToRemove, 1);
+//             }
+
+//             return toDoList.save()
+//                 .then(() => {
+//                     return Item.findByIdAndRemove(itemId).then(() => {
+//                         return ToDoList.findOne({'userId':userId, '_id':listId}).populate('items')
+//                             .then(list => list)
+//                             .catch(err => console.error("Error finding list just saved", err))
+//                     })
+//                     .catch(err => console.log("error removing item", err))
+//                 })
+//                 .catch(err => console.error("error saving list with item removed", err))
+//         })
+//         .catch(err => console.error("ERROR finding list to remove from", err))
+// }
 
 module.exports = {createEmptyList, getList, checkItem, uncheckItem, addItem, removeItem}

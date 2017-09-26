@@ -3,16 +3,16 @@
 const mongoose = require('mongoose')
 const uuid = require('uuid')
 
-var itemSchema = mongoose.Schema(
+const itemSchema = mongoose.Schema(
     {name:String, 
     complete: Boolean, 
     completedAt: Date},
     { collection: 'items' }
 )
 
-var Item = mongoose.model('Item', itemSchema)
+const Item = mongoose.model('Item', itemSchema)
 
-var listSchema = mongoose.Schema(
+const listSchema = mongoose.Schema(
     {   name: String, 
         userId: String,
         items: [{type: mongoose.Schema.Types.ObjectId, ref: 'Item'}],
@@ -20,15 +20,15 @@ var listSchema = mongoose.Schema(
     { collection: 'lists' }
 )
 
-var ToDoList = mongoose.model('ToDoList', listSchema)
+const ToDoList = mongoose.model('ToDoList', listSchema)
 
 function createDefaultList(userId) {
     listExistsForUser(userId).then(listExists => {
         if(listExists) return
         else {
-            var item1 = new Item({name: "Foo Item", complete: false, completedAt: null})
-            var item2 = new Item({name: "Item Two", complete: false, completedAt: null})
-            var item3 = new Item({name: "Item Bar", complete: true, completedAt: '2017-07-06T16:43:41Z'})
+            const item1 = new Item({name: "Foo Item", complete: false, completedAt: null})
+            const item2 = new Item({name: "Item Two", complete: false, completedAt: null})
+            const item3 = new Item({name: "Item Bar", complete: true, completedAt: '2017-07-06T16:43:41Z'})
 
             item1.save(function(err, callback){
                 if(err) return console.error(err)
@@ -40,7 +40,7 @@ function createDefaultList(userId) {
                 if(err) return console.error(err)
             })
 
-            var defaultToDoList = new ToDoList(
+            const defaultToDoList = new ToDoList(
                 {name: "TEST LIST", 
                 userId: userId, 
                 items: [item1._id, item2._id, item3._id]

@@ -53,7 +53,7 @@ class ListItem extends Component {
     
     render() {
 
-        var item = this.state.item;
+        let item = this.state.item;
 
         return (
             <li className="item" {...this.props.children} onMouseEnter={this.showRemoveButton} onMouseLeave={this.hideRemoveButton}>
