@@ -88,22 +88,77 @@ describe('toDoListRepository', () => {
         .then(l => savedList = l)
     })
 
-    afterEach(() => {
-    //   return domainHelper.deleteEntireList(userId, savedList._id)
-    })
-
     it('should NOT save a list', () => {
         expect(savedList).to.eql({})
     })
 
     it('should NOT save the item', () => {
         return Item.findOne({'name':itemName}).then(item => {
-            console.log('here. item', item)
             expect(item).to.be.null
         })
     })
   })
 
+   context('when checking an item as complete', () => {
+    let listId, savedList, item1Id, returnedItem
+    const item1Name = "Item 1"
+    const item2Name = "Item 2"
+    const expectedCompletedAt = new Date().toLocaleString()
+
+    beforeEach(() => {
+      return toDoListRepository.createEmptyList(userId, "My Test List")
+        .then(l => listId = l._id)
+        .then(() => toDoListRepository.addItem(userId, listId, item1Name))
+        .then(list => item1Id = list.items[0]._id)
+        .then(() => toDoListRepository.addItem(userId, listId, item2Name))
+        .then(() => toDoListRepository.checkItem(item1Id, expectedCompletedAt).then(i => returnedItem = i))
+        
+        .then(() => toDoListRepository.getList(userId))
+        .then(l => savedList = l)
+    })
+
+    afterEach(() => {
+      return domainHelper.deleteEntireList(userId, listId)
+    })
+
+    it('should return the updated item', () => {
+        expect(returnedItem._id).to.eql(savedList.items[0]._id)
+        expect(returnedItem.completedAt).to.eql(savedList.items[0].completedAt)
+        expect(returnedItem.complete).to.eql(savedList.items[0].complete)
+        expect(returnedItem.name).to.eql(savedList.items[0].name)
+    })
+
+    it('should mark the completed item as complete', () => {
+        expect(savedList.items.length).to.equal(2)
+        expect(savedList.items[0].complete).to.be.true
+        let returnedDate = new Date(savedList.items[0].completedAt).toLocaleString()
+        expect(returnedDate).to.equal(expectedCompletedAt)
+    })
+
+    it('should NOT mark the other item as complete', () => {
+        expect(savedList.items[1].complete).to.be.false
+    })
+  })
+
+  context('when checking an item as complete but the item DOES NOT exist', () => {
+    let error
+    const itemId = mongoose.Types.ObjectId()
+
+    beforeEach(() => {
+      return toDoListRepository.checkItem(itemId, new Date().toLocaleString())
+        .catch(err => error = err)
+    })
+
+    it('should NOT save an item', () => {
+        return Item.findOne({'id':itemId}).then(item => {
+            expect(item).to.be.null
+        })
+    })
+
+    it('should throw an error', () => {
+        expect(error).to.exist
+    })
+  })
   
 
 //   context('when a user has bookmarks, but not the one we want to delete', () => {

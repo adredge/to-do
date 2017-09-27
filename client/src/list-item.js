@@ -21,8 +21,8 @@ class ListItem extends Component {
     checkItem = () => {
         const completedAt = new Date().toLocaleString()
         Client.checkItem(this.state.item._id, completedAt)
-        .then(() => {
-            this.setState({item: {...this.state.item, complete: true, completedAt: completedAt}})
+        .then(updatedItem => {
+            this.setState({item: {...this.state.item, ...updatedItem }})
         })
     }
     
@@ -53,7 +53,7 @@ class ListItem extends Component {
     
     render() {
 
-        let item = this.state.item;
+        const item = this.state.item;
 
         return (
             <li className="item" {...this.props.children} onMouseEnter={this.showRemoveButton} onMouseLeave={this.hideRemoveButton}>

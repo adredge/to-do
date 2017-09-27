@@ -23,7 +23,7 @@ function removeItem(listId, itemId, userId){
 
 function checkItem(itemId, completedAt){
     const data = {itemId, completedAt}
-    return axios.post('api/checkItem', data)
+    return axios.post('api/checkItem', data).then(response => response.data)
 }
 
 function uncheckItem(itemId){

@@ -44,20 +44,16 @@ const addItem = function(userId, listId, newItemName){
     }).catch(err => console.error("ERROR finding list to add item to", err))
 }
 
-// const checkItem = function(itemId, completedAt) {
-//     return Item.findById(itemId, (err, item) => {
-//         if (err) return console.error(err)
-//         if(item === null) return console.error('Unable to find item with id ', itemId)
+const checkItem = function(itemId, completedAt) {
+    return Item.findById(itemId).then(item => {
+        if(!item ) return Promise.reject('Unable to find item with id ', itemId)
   
-//         item.set({ complete: true, completedAt });
-//         item.save(function (err, updatedItem) {
-//             if (err) return console.error(err)
-//             return updatedItem
-//         })
-//     })
-// }
+        item.set({ complete: true, completedAt });
+        return item.save().then(() => item).catch(err => console.error("ERROR saving completed item", err))   
+    })
+}
 
-// const uncheckItem = function(itemId) {
+const uncheckItem = function(itemId) {
 //     return Item.findById(itemId, (err, item) => {
 //         if (err) return console.error(err)
 //         if(item === null) return console.error('Unable to find item with id ', itemId)
@@ -68,11 +64,11 @@ const addItem = function(userId, listId, newItemName){
 //             return updatedItem
 //         })
 //     })
-// }
+}
 
 
 
-// const removeItem = function(itemId, listId, userId){
+const removeItem = function(itemId, listId, userId){
 //     return ToDoList.findOne({'_id':listId}).then(toDoList => {
 //             if(!toDoList) {
 //                 console.log("Unable to find list to remove from")
@@ -95,6 +91,6 @@ const addItem = function(userId, listId, newItemName){
 //                 .catch(err => console.error("error saving list with item removed", err))
 //         })
 //         .catch(err => console.error("ERROR finding list to remove from", err))
-// }
+}
 
 module.exports = {createEmptyList, getList, checkItem, uncheckItem, addItem, removeItem}
