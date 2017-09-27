@@ -42,7 +42,6 @@ class ListItem extends Component {
         if(item.complete) {
             return (<div className="completedAt">
                         Completed {new Date(item.completedAt).toLocaleString()}
-                        {/* {moment(item.completedAt, "YYY-MM-DDTHH:mm:ssZ").toDate()} */}
                     </div>)
         }
         return;

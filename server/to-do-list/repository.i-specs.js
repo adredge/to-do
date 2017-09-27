@@ -99,7 +99,7 @@ describe('toDoListRepository', () => {
     })
   })
 
-   context('when checking an item as complete', () => {
+  context('when checking an item as complete', () => {
     let listId, savedList, item1Id, returnedItem
     const item1Name = "Item 1"
     const item2Name = "Item 2"
@@ -111,8 +111,8 @@ describe('toDoListRepository', () => {
         .then(() => toDoListRepository.addItem(userId, listId, item1Name))
         .then(list => item1Id = list.items[0]._id)
         .then(() => toDoListRepository.addItem(userId, listId, item2Name))
-        .then(() => toDoListRepository.checkItem(item1Id, expectedCompletedAt).then(i => returnedItem = i))
-        
+        .then(() => toDoListRepository.checkItem(item1Id, expectedCompletedAt)
+            .then(i => returnedItem = i))
         .then(() => toDoListRepository.getList(userId))
         .then(l => savedList = l)
     })
@@ -157,9 +157,78 @@ describe('toDoListRepository', () => {
 
     it('should throw an error', () => {
         expect(error).to.exist
+        expect(error).to.contain('Unable to find item with id ' + itemId)
+    })
+  })
+
+  context('when UNchecking an item', () => {
+    let listId, savedList, item1Id, item2Id, updatedItem
+    const item1Name = "Item 1"
+    const item2Name = "Item 2"
+    const expectedCompletedAt1 = new Date().toLocaleString()
+    const expectedCompletedAt2 = new Date(2016).toLocaleString()
+
+    beforeEach(() => {
+      return toDoListRepository.createEmptyList(userId, "My Test List")
+        .then(l => listId = l._id)
+        .then(() => toDoListRepository.addItem(userId, listId, item1Name))
+        .then(list => item1Id = list.items[0]._id)
+        .then(() => toDoListRepository.addItem(userId, listId, item2Name))
+        .then(list => item2Id = list.items[1]._id)
+        .then(() => toDoListRepository.checkItem(item1Id, expectedCompletedAt1))
+        .then(() => toDoListRepository.checkItem(item2Id, expectedCompletedAt2))
+        .then(() => toDoListRepository.uncheckItem(item2Id))
+        .then(item => updatedItem = item)
+        .then(() => toDoListRepository.getList(userId))
+        .then(l => savedList = l)
+    })
+
+    afterEach(() => {
+      return domainHelper.deleteEntireList(userId, listId)
+    })
+
+    it('should return the updated item as unchecked', () => {
+        expect(updatedItem._id).to.eql(item2Id)
+        expect(updatedItem.completedAt).to.be.null
+        expect(updatedItem.complete).to.be.false
+        expect(updatedItem.name).to.eql(item2Name)
+    })
+
+    it('should mark the unchecked item as incomplete', () => {
+        expect(savedList.items.length).to.equal(2)
+        expect(savedList.items[1]._id).to.eql(item2Id)
+        expect(savedList.items[1].complete).to.be.false
+        expect(savedList.items[1].completedAt).to.be.null
+    })
+
+    it('should NOT mark the other item as incomplete', () => {
+        expect(savedList.items[0]._id).to.eql(item1Id)
+        expect(savedList.items[0].complete).to.be.true
+        let returnedDate = new Date(savedList.items[0].completedAt).toLocaleString()
+        expect(returnedDate).to.equal(expectedCompletedAt1)
     })
   })
   
+  context('when unchecking an item but the item DOES NOT exist', () => {
+    let error
+    const itemId = mongoose.Types.ObjectId()
+
+    beforeEach(() => {
+      return toDoListRepository.uncheckItem(itemId)
+        .catch(err => error = err)
+    })
+
+    it('should NOT save an item', () => {
+        return Item.findOne({'id':itemId}).then(item => {
+            expect(item).to.be.null
+        })
+    })
+
+    it('should throw a meaningful error', () => {
+        expect(error).to.exist
+        expect(error).to.contain('Unable to find item with id ' + itemId)
+    })
+  })
 
 //   context('when a user has bookmarks, but not the one we want to delete', () => {
 //     let bookmark, firstResult, secondResult

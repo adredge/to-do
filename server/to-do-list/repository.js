@@ -46,7 +46,7 @@ const addItem = function(userId, listId, newItemName){
 
 const checkItem = function(itemId, completedAt) {
     return Item.findById(itemId).then(item => {
-        if(!item ) return Promise.reject('Unable to find item with id ', itemId)
+        if(!item ) return Promise.reject('Unable to find item with id ' + itemId)
   
         item.set({ complete: true, completedAt });
         return item.save().then(() => item).catch(err => console.error("ERROR saving completed item", err))   
@@ -54,16 +54,12 @@ const checkItem = function(itemId, completedAt) {
 }
 
 const uncheckItem = function(itemId) {
-//     return Item.findById(itemId, (err, item) => {
-//         if (err) return console.error(err)
-//         if(item === null) return console.error('Unable to find item with id ', itemId)
-  
-//         item.set({ complete: false, completedAt: null });
-//         item.save(function (err, updatedItem) {
-//             if (err) return console.error(err)
-//             return updatedItem
-//         })
-//     })
+     return Item.findById(itemId).then(item => {
+        if(!item ) return Promise.reject('Unable to find item with id ' + itemId)
+
+        item.set({ complete: false, completedAt: null })
+        return item.save().then(() => item).catch(err => console.error("ERROR saving completed item", err))   
+    })
 }
 
 
