@@ -14,8 +14,8 @@ function addItem(userId, listId, newItemName){
         return res.data})
 }
 
-function removeItem(listId, itemId, userId){
-    const data = {listId, itemId, userId}
+function removeItem(userId, listId, itemId){
+    const data = {userId, listId, itemId}
     return axios.post('api/removeItem', data).then(res => {
         console.log('resolved', res)
         return res.data})
