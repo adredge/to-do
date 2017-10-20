@@ -74,8 +74,7 @@ const removeItem = function(userId, listId, itemId){
         }
         return toDoList.save().then(() => {
             return Item.findByIdAndRemove(itemId).then(() => {
-                return ToDoList.findOne({'userId':userId, '_id':listId})
-                //.populate('items')
+                return ToDoList.findOne({'userId':userId, '_id':listId}).populate('items')
                 .then(list => list)
             })
         })

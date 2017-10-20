@@ -231,15 +231,18 @@ describe('toDoListRepository', () => {
   })
 
   context('when removing an item', () => {
-    let listId, itemId, savedList
-    const itemName = "Item 1"
+    let listId, item1Id, item2, savedList
+    const item1Name = "Item 1"
+    const item2Name = "Item 2"
 
     beforeEach(() => {
       return toDoListRepository.createEmptyList(userId, "My Test List")
         .then(l => listId = l._id)
-        .then(() => toDoListRepository.addItem(userId, listId, itemName))
-        .then(list => itemId = list.items[0]._id)
-        .then(() => toDoListRepository.removeItem(userId, listId, itemId)
+        .then(() => toDoListRepository.addItem(userId, listId, item1Name))
+        .then(list => item1Id = list.items[0]._id)
+        .then(() => toDoListRepository.addItem(userId, listId, item2Name))
+        .then(list => item2 = list.items[1])
+        .then(() => toDoListRepository.removeItem(userId, listId, item1Id)
         .then(list => savedList = list))
     })
 
@@ -248,11 +251,15 @@ describe('toDoListRepository', () => {
     })
 
     it('should return the list without the removed item', () => {
-        expect(savedList.items).to.eql([])
+        expect(savedList.items.length).to.eql(1)
+        expect(savedList.items[0]._id).to.eql(item2._id)
+        expect(savedList.items[0].completedAt).to.be.undefined
+        expect(savedList.items[0].complete).to.be.false
+        expect(savedList.items[0].name).to.eql(item2.name)
     })
 
     it('should delete the removed item', () => {
-        return Item.findOne({'_id':itemId}).then(item => {
+        return Item.findOne({'_id':item1Id}).then(item => {
            expect(item).to.be.null
         })
     })
