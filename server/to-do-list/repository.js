@@ -64,29 +64,22 @@ const uncheckItem = function(itemId) {
 
 
 
-const removeItem = function(itemId, listId, userId){
-//     return ToDoList.findOne({'_id':listId}).then(toDoList => {
-//             if(!toDoList) {
-//                 console.log("Unable to find list to remove from")
-//                 return
-//             }
-//             const itemIndexToRemove = toDoList.items.indexOf(itemId)
-//             if (itemIndexToRemove > -1) {
-//                 toDoList.items.splice(itemIndexToRemove, 1);
-//             }
-
-//             return toDoList.save()
-//                 .then(() => {
-//                     return Item.findByIdAndRemove(itemId).then(() => {
-//                         return ToDoList.findOne({'userId':userId, '_id':listId}).populate('items')
-//                             .then(list => list)
-//                             .catch(err => console.error("Error finding list just saved", err))
-//                     })
-//                     .catch(err => console.log("error removing item", err))
-//                 })
-//                 .catch(err => console.error("error saving list with item removed", err))
-//         })
-//         .catch(err => console.error("ERROR finding list to remove from", err))
+const removeItem = function(userId, listId, itemId){
+    return ToDoList.findOne({'_id':listId}).then(toDoList => {
+        if(!toDoList) return
+        
+        const itemIndexToRemove = toDoList.items.indexOf(itemId)
+        if (itemIndexToRemove > -1) {
+            toDoList.items.splice(itemIndexToRemove, 1);
+        }
+        return toDoList.save().then(() => {
+            return Item.findByIdAndRemove(itemId).then(() => {
+                return ToDoList.findOne({'userId':userId, '_id':listId})
+                //.populate('items')
+                .then(list => list)
+            })
+        })
+    })
 }
 
 module.exports = {createEmptyList, getList, checkItem, uncheckItem, addItem, removeItem}

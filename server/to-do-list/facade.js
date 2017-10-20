@@ -20,6 +20,6 @@ module.exports = {
   },
 
   removeItem(removeItemDetails) {
-    return toDoListRepository.removeItem(removeItemDetails.itemId, removeItemDetails.listId, removeItemDetails.userId)
+    return toDoListRepository.removeItem(removeItemDetails.userId, removeItemDetails.listId, removeItemDetails.itemId)
   }
 }

@@ -150,7 +150,7 @@ describe('toDoListRepository', () => {
     })
 
     it('should NOT save an item', () => {
-        return Item.findOne({'id':itemId}).then(item => {
+        return Item.findOne({'_id':itemId}).then(item => {
             expect(item).to.be.null
         })
     })
@@ -230,59 +230,61 @@ describe('toDoListRepository', () => {
     })
   })
 
-//   context('when a user has bookmarks, but not the one we want to delete', () => {
-//     let bookmark, firstResult, secondResult
+  context('when removing an item', () => {
+    let listId, itemId, savedList
+    const itemName = "Item 1"
 
-//     beforeEach(() => {
-//       bookmark = bookmarkMother.createBookmark(userId)
+    beforeEach(() => {
+      return toDoListRepository.createEmptyList(userId, "My Test List")
+        .then(l => listId = l._id)
+        .then(() => toDoListRepository.addItem(userId, listId, itemName))
+        .then(list => itemId = list.items[0]._id)
+        .then(() => toDoListRepository.removeItem(userId, listId, itemId)
+        .then(list => savedList = list))
+    })
 
-//       return userBookmarkRepository.save(bookmark)
-//         .then(() => userBookmarkRepository.get({where:{userId}}))
-//         .then(b => firstResult = b)
-//         .then(() => userBookmarkRepository.deleteBookmark(userId, uuid.v4()))
-//         .then(() => userBookmarkRepository.get({where:{userId}}))
-//         .then(b => secondResult = b)
-//     })
+    afterEach(() => {
+      return domainHelper.deleteEntireList(userId, listId)
+    })
 
-//     afterEach(() => {
-//       return domainHelper.deleteAllBookmarksForUser(userId)
-//     })
+    it('should return the list without the removed item', () => {
+        expect(savedList.items).to.eql([])
+    })
 
-//     it('should not delete the existing user bookmark', () => {
-//       expect(firstResult).to.eql(bookmark)
-//       expect(secondResult).to.eql(bookmark)
-//     })
-//   })
+    it('should delete the removed item', () => {
+        return Item.findOne({'_id':itemId}).then(item => {
+           expect(item).to.be.null
+        })
+    })
+  })
 
-//   context('when a user has no bookmarks', () => {
-//     it('should not throw when attempting to delete', () => {
-//       return expect(userBookmarkRepository.deleteBookmark(userId, uuid.v4())).to.be.fulfilled
-//     })
-//   })
+  context('when removing an item from a list and the item DOES NOT exist', () => {
+    let listId, error
+    const itemId = mongoose.Types.ObjectId()
 
-//   context('when the bookmark does not belong to the user', () => {
-//     let bookmark, firstResult, secondResult, otherUserId
+    beforeEach(() => {
+        return toDoListRepository.createEmptyList(userId, "My Test List")
+        .then(l => listId = l._id) 
+        .then(toDoListRepository.removeItem(userId, listId, itemId))
+        .catch(err => error = err)
+    })
 
-//     beforeEach(() => {
-//       otherUserId = uuid.v4()
-//       bookmark = bookmarkMother.createBookmark(otherUserId)
+    it('should NOT throw an error', () => {
+        expect(error).to.be.undefined
+    })
+  })
 
-//       return userBookmarkRepository.save(bookmark)
-//         .then(() => userBookmarkRepository.get({where:{userId: otherUserId}}))
-//         .then(b => firstResult = b)
-//         .then(() => userBookmarkRepository.deleteBookmark(uuid.v4(), bookmark.bookmarkId))
-//         .then(() => userBookmarkRepository.get({where:{userId: otherUserId}}))
-//         .then(b => secondResult = b)
-//     })
+  context('when removing an item from a list that DOES NOT exist', () => {
+    let error
+    const listId = mongoose.Types.ObjectId()
 
-//     afterEach(() => {
-//       return domainHelper.deleteAllBookmarksForUser(otherUserId)
-//     })
+    beforeEach(() => {
+      return toDoListRepository.removeItem(userId, listId, 'foo')
+        .catch(err => error = err)
+    })
 
-//     it('should NOT delete the other user\'s bookmark', () => {
-//       expect(firstResult).to.eql(bookmark)
-//       expect(secondResult).to.eql(bookmark)
-//     })
-//   })
-
+    it('should NOT throw an error', () => {
+        expect(error).to.be.undefined
+    })
+  })
 })
