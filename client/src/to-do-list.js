@@ -25,7 +25,7 @@ class ToDoList extends Component {
     };
 
     renderListItems = () => {
-        console.log('here', this.state.list.items)
+        console.log('here', this.state.list)
         return this.state.list.items.map(item => <ListItem key={item._id} item={item} removeItem={this.removeItem}/>)
     }
 

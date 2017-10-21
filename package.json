@@ -4,7 +4,8 @@
   "description": "Basic to-do list web application",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/mocha \"./server/**/*.specs.js\"",
+    "test-watch": "npm test -- -w",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server.js",
     "client": "node start-client.js",
@@ -16,7 +17,8 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "concurrently": "^3.5.0",
-    "mocha": "^3.5.3"
+    "mocha": "^3.5.3",
+    "testdouble": "^3.2.6"
   },
   "dependencies": {
     "body-parser": "^1.17.2",
