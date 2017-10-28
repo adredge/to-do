@@ -15,11 +15,12 @@ module.exports = {
     return toDoListRepository.uncheckItem(itemId)
   },
 
-  addItem(addItemDetails) {
-    return toDoListRepository.addItem(addItemDetails.userId, addItemDetails.listId, addItemDetails.newItemName)
+  addItem(userId, addItemDetails) {
+    return toDoListRepository.addItem(userId, addItemDetails.listId, addItemDetails.newItemName)
   },
 
-  removeItem(removeItemDetails) {
-    return toDoListRepository.removeItem(removeItemDetails.userId, removeItemDetails.listId, removeItemDetails.itemId)
+  removeItem(userId, removeItemDetails) {
+    console.log('remove', userId, removeItemDetails.listId, removeItemDetails.itemId)
+    return toDoListRepository.removeItem(userId, removeItemDetails.listId, removeItemDetails.itemId)
   }
 }

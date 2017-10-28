@@ -4,7 +4,7 @@ const toDoListModel = require('../to-do-list/schema')
 module.exports = function(config, env) {
     mongoose.connect(config.db, {useMongoClient: true})
     mongoose.Promise = global.Promise
-    var db = mongoose.connection
+    const db = mongoose.connection
     db.on('error', function (err) {
         console.log('connection error...', err);
     });
@@ -12,6 +12,6 @@ module.exports = function(config, env) {
         console.log('connected to todo database.');
     });
 
-    if(env == 'development')
+    if(env == 'development' || env == 'test')
         toDoListModel.createDefaultList(config.defaultUserId)
 };

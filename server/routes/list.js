@@ -3,9 +3,8 @@ const toDoListFacade = require('../to-do-list/facade.js')
 
 const router = express.Router()
 
-router.get('/list/:userId', (req, res) => {
-  const userId = req.params.userId;
-  return toDoListFacade.getDefaultToDoList(userId).then(vm => res.json(vm))
+router.get('/list', (req, res) => {
+  return toDoListFacade.getDefaultToDoList(req.userId).then(vm => res.json(vm))
 });
 
 router.post('/checkItem', (req,res) => {
@@ -20,11 +19,11 @@ router.post('/uncheckItem', (req,res) => {
 });
 
 router.post('/addItem', (req, res) => {
-  return toDoListFacade.addItem(req.body).then(vm => res.json(vm))
+  return toDoListFacade.addItem(req.userId, req.body).then(vm => res.json(vm))
 });
 
 router.post('/removeItem', (req, res) => {
-  return toDoListFacade.removeItem(req.body).then(vm => res.json(vm))
+  return toDoListFacade.removeItem(req.userId, req.body).then(vm => res.json(vm))
 });
 
 module.exports = router

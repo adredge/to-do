@@ -88,12 +88,12 @@ describe('to do list facade', () => {
       toDoList = listTestData.build()
 
       listId = toDoList._id
-      const itemDetails = {userId, listId, newItemName}
+      const itemDetails = {listId, newItemName}
 
       td.replace(toDoListRepository, 'addItem')
       td.when(toDoListRepository.addItem(td.matchers.anything(), td.matchers.anything(), td.matchers.anything())).thenResolve(toDoList)
 
-      return toDoListFacade.addItem(itemDetails).then(l => actual = l)
+      return toDoListFacade.addItem(userId, itemDetails).then(l => actual = l)
     })
 
     it('should call the to do list repository', () => {
@@ -113,12 +113,12 @@ describe('to do list facade', () => {
 
       listId = toDoList._id
       itemId = toDoList.items[0]._id
-      const itemDetails = {userId, listId, itemId}
+      const itemDetails = {listId, itemId}
 
       td.replace(toDoListRepository, 'removeItem')
       td.when(toDoListRepository.removeItem(td.matchers.anything(), td.matchers.anything(), td.matchers.anything())).thenResolve(toDoList)
 
-      return toDoListFacade.removeItem(itemDetails).then(l => actual = l)
+      return toDoListFacade.removeItem(userId, itemDetails).then(l => actual = l)
     })
 
     it('should call the to do list repository', () => {

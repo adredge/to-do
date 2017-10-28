@@ -3,6 +3,7 @@ import Client from "./Client";
 import './to-do-list.css';
 import ListItem from './list-item'
 
+
 class ToDoList extends Component {
     constructor(props){
         super(props);
@@ -10,13 +11,13 @@ class ToDoList extends Component {
             list: {
                 _id: "",
                 items: []
-            },
+            },  
             addItemName: ""
         };
     }
 
     componentWillMount() {
-        Client.getList('test-user')
+        Client.getList()
         .then((list) => {
             this.setState({
                 list: list
@@ -25,12 +26,12 @@ class ToDoList extends Component {
     };
 
     renderListItems = () => {
-        console.log('here', this.state.list)
+        if(!this.state.list || !this.state.list.items || this.state.list.items.length === 0) return
         return this.state.list.items.map(item => <ListItem key={item._id} item={item} removeItem={this.removeItem}/>)
     }
 
     removeItem = (itemId) => {
-        Client.removeItem( 'test-user', this.state.list._id, itemId)
+        Client.removeItem(this.state.list._id, itemId)
         .then(list => {
             this.setState({
                 list: list
@@ -40,7 +41,7 @@ class ToDoList extends Component {
 
 
     addItem = () => {
-        Client.addItem('test-user', this.state.list._id, this.state.addItemName)
+        Client.addItem(this.state.list._id, this.state.addItemName)
         .then(list => {
             this.setState({
                 list: list,

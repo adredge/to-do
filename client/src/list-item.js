@@ -27,15 +27,8 @@ class ListItem extends Component {
     }
     
     handleCheck = () => {
-        if(this.state.item.complete)
-            {console.log('unchecking item')
-            this.uncheckItem()
-            }
-        else
-            {
-                console.log('checking item')
-            this.checkItem()
-            }
+        if(this.state.item.complete) this.uncheckItem()
+        else this.checkItem()
     }
 
     renderCompletedDetails = (item) => {
