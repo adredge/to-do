@@ -1,11 +1,14 @@
 "use strict"
 
 const acceptanceSpecsHelper = require('../../test/acceptance-specs-helper')
+const config = require('../config/config')['test']
 
-describe('/list/test-user', function () {
+describe('When ', function () {
+  const userId = config.defaultUserId
   let actual
   before(() => {
-    return acceptanceSpecsHelper.makeApiCall('list/test-user').then(data => actual = data)
+    return acceptanceSpecsHelper.makeApiCall(`list`).then(data => actual = data)
+  
   })
 
   it('should return a list', () => {

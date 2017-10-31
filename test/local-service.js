@@ -9,8 +9,9 @@ module.exports = class LocalService {
     }
 
     start() {
-        if (this.serviceProcess)
+        if (this.serviceProcess){
             return Promise.reject(new Error('The service is already running!'))
+        }
 
         return LocalService.startChildProcess(this.serviceFilePath)
             .then(process => this.serviceProcess = process)
@@ -26,16 +27,14 @@ module.exports = class LocalService {
             const child = childProcess.fork(serviceFilePath)
 
             child.on('message', m => {
-                console.log('child process received message', m)
-                //if (m === 'service_started')
-                //    resolve(child)
+                if (m === 'service_started')
+                    resolve(child)
             })
-            resolve(child)
 
-            //child.on('error', err => {
-            //    console.error('LOCAL-SERVICE: failed to start child process!', err)
-            //    reject(err)
-            //})
+            child.on('error', err => {
+               console.error('LOCAL-SERVICE: failed to start child process!', err)
+               reject(err)
+            })
             //child.on('close', (code) => {
             //    if (code)
             //        console.error('LOCAL-SERVICE: exited with code', code)
@@ -45,7 +44,7 @@ module.exports = class LocalService {
 
     static killChildProcess(proc) {
         if (!proc) return Promise.resolve()
-
+            
         return new Promise((resolve) => {
             proc.once('close', code => resolve(code))
             proc.kill('SIGINT')

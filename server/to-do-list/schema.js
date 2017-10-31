@@ -41,7 +41,7 @@ function createDefaultList(userId) {
             })
 
             const defaultToDoList = new ToDoList(
-                {name: "TEST LIST", 
+                {name: "DEFAULT LIST", 
                 userId: userId, 
                 items: [item1._id, item2._id, item3._id]
             })

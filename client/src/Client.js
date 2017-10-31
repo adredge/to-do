@@ -1,24 +1,28 @@
 import axios from 'axios'
 
 function getList(){
-    return fetch(`/api/list`)
+    return axios.get('/api/list')
         .then(res => {
-            return res.json();
+            if(!res.data)
+                return createList()
+            return res.data
         })
+}
+
+function createList(){
+    return axios.post('api/createList').then(res => {
+        return axios.get('/api/list').then(res => res.data)
+    })
 }
 
 function addItem(listId, newItemName){
     const data = {listId, newItemName}
-    return axios.post('api/addItem', data).then(res => {
-        console.log('resolved', res)
-        return res.data})
+    return axios.post('api/addItem', data).then(res => res.data)
 }
 
 function removeItem(listId, itemId){
     const data = {listId, itemId}
-    return axios.post('api/removeItem', data).then(res => {
-        console.log('resolved', res)
-        return res.data})
+    return axios.post('api/removeItem', data).then(res => res.data)
 }
 
 function checkItem(itemId, completedAt){

@@ -7,6 +7,10 @@ module.exports = {
     return toDoListRepository.getList(userId)
   },
 
+  createList(userId) {
+    return toDoListRepository.createEmptyList(userId, 'Default')
+  },
+
   checkItem(itemId, completedAt) {
     return toDoListRepository.checkItem(itemId, completedAt)
   },

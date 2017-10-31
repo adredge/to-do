@@ -12,6 +12,6 @@ module.exports = function(config, env) {
         console.log('connected to todo database.');
     });
 
-    if(env == 'development' || env == 'test')
+    if(env == 'development')
         toDoListModel.createDefaultList(config.defaultUserId)
 };
