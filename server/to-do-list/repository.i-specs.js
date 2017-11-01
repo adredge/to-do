@@ -5,7 +5,7 @@ const mongoose = require('mongoose')
 
 const toDoListRepository = require('./repository')
 const {Item} = require('./schema')
-const domainHelper = require('../../test/domain-helpers')
+const dbHelper = require('../../test/db-helper')
 
 describe('toDoListRepository', () => {
   let userId
@@ -27,7 +27,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return domainHelper.deleteEntireList(userId, savedList._id)
+      return dbHelper.deleteEntireList(userId, savedList._id)
     })
 
     it('should create the list', () => {
@@ -58,7 +58,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return domainHelper.deleteEntireList(userId, savedList._id)
+      return dbHelper.deleteEntireList(userId, savedList._id)
     })
 
     it('should have all 3 items in the list', () => {
@@ -118,7 +118,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return domainHelper.deleteEntireList(userId, listId)
+      return dbHelper.deleteEntireList(userId, listId)
     })
 
     it('should return the updated item', () => {
@@ -184,7 +184,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return domainHelper.deleteEntireList(userId, listId)
+      return dbHelper.deleteEntireList(userId, listId)
     })
 
     it('should return the updated item as unchecked', () => {
@@ -247,7 +247,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return domainHelper.deleteEntireList(userId, listId)
+      return dbHelper.deleteEntireList(userId, listId)
     })
 
     it('should return the list without the removed item', () => {

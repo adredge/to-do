@@ -9,10 +9,10 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "node server.js",
     "client": "node start-client.js",
-    "test-integration": "./node_modules/.bin/mocha ./test/database-setup.js \"./server/**/*.i-specs.js\"",
-    "ti": "./node_modules/.bin/mocha ./test/database-setup.js \"./server/**/*.i-specs.js\" || true",
-    "ta": "./node_modules/.bin/mocha \"./server/**/*.a-specs.js\" || true",
-    "test-acceptance": "./node_modules/.bin/mocha \"./server/**/*.a-specs.js\" || true"
+    "test-integration": "./node_modules/.bin/mocha ./test/database-setup-i.js \"./server/**/*.i-specs.js\"",
+    "ti": "./node_modules/.bin/mocha ./test/database-setup-i.js \"./server/**/*.i-specs.js\" || true",
+    "ta": "./node_modules/.bin/mocha ./test/database-setup.js \"./server/**/*.a-specs.js\" || true",
+    "test-acceptance": "./node_modules/.bin/mocha ./test/database-setup.js \"./server/**/*.a-specs.js\" || true"
   },
   "author": "Amy Dredge",
   "license": "ISC",

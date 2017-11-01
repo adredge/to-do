@@ -9,7 +9,7 @@ module.exports = function(config, env) {
         console.log('connection error...', err);
     });
     db.once('open', function () {
-        console.log('connected to todo database.');
+        console.log('connected to database.');
     });
 
     if(env == 'development')
