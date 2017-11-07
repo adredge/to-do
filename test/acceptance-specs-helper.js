@@ -1,7 +1,6 @@
 const axios = require('axios')
 const LocalService = require('./local-service')
 const config = require('../server/config/config')['test'];
-const toDoListModel = require('../server/to-do-list/schema')
 
 const localService = new LocalService('./server.js')
 
