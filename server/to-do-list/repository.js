@@ -70,7 +70,7 @@ module.exports = {
 
             const itemIndexToRemove = toDoList.items.indexOf(itemId)
             if (itemIndexToRemove > -1) {
-                toDoList.items.splice(itemIndexToRemove, 1);
+                toDoList.items.splice(itemIndexToRemove);
             }
             return toDoList.save().then(() => Item.findByIdAndRemove(itemId).then(() => Promise.resolve()))
         })
