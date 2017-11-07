@@ -27,7 +27,11 @@ router.post('/addItem', (req, res) => {
 });
 
 router.delete('/removeItem/:listId/:itemId', (req, res) => {
-  return toDoListFacade.removeItem(req.userId, req.params.listId, req.params.itemId).then(vm => res.json(vm))
+  return toDoListFacade.removeItem(req.userId, req.params.listId, req.params.itemId).then(res.status(200).end())
 });
+
+router.delete('/deleteList/:listId', (req,res) => {
+  return toDoListFacade.deleteList(req.userId, req.params.listId).then(() => res.status(200).end())
+})
 
 module.exports = router

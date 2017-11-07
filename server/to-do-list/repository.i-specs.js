@@ -5,7 +5,6 @@ const mongoose = require('mongoose')
 
 const toDoListRepository = require('./repository')
 const {Item} = require('./schema')
-const dbHelper = require('../../test/db-helper')
 
 describe('toDoListRepository', () => {
   let userId
@@ -27,7 +26,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return dbHelper.deleteEntireList(userId, savedList._id)
+      return toDoListRepository.deleteList(userId, savedList._id)
     })
 
     it('should create the list', () => {
@@ -58,7 +57,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return dbHelper.deleteEntireList(userId, savedList._id)
+      return toDoListRepository.deleteList(userId, savedList._id)
     })
 
     it('should have all 3 items in the list', () => {
@@ -121,7 +120,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return dbHelper.deleteEntireList(userId, listId)
+        return toDoListRepository.deleteList(userId, listId)
     })
 
     it('should not return anything but should succeed', () => {
@@ -192,7 +191,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return dbHelper.deleteEntireList(userId, listId)
+        return toDoListRepository.deleteList(userId, listId)
     })
 
     it('should not return anything but should succeed', () => {
@@ -248,6 +247,7 @@ describe('toDoListRepository', () => {
         .then(list => item1Id = list.items[0]._id)
         .then(() => toDoListRepository.addItem(userId, listId, item2Name))
         .then(list => item2Id = list.items[1]._id)
+        .then(() => toDoListRepository.getList(userId))
         .then(() => toDoListRepository.removeItem(userId, listId, item1Id)
         .then(r => response = r)
         .then(() => toDoListRepository.getList(userId))
@@ -255,7 +255,7 @@ describe('toDoListRepository', () => {
     })
 
     afterEach(() => {
-      return dbHelper.deleteEntireList(userId, listId)
+      return toDoListRepository.deleteList(userId, listId)
     })
 
     it('should not return anything but should succeed', () => {
@@ -286,8 +286,12 @@ describe('toDoListRepository', () => {
     beforeEach(() => {
         return toDoListRepository.createEmptyList(userId, "My Test List")
         .then(l => listId = l._id) 
-        .then(toDoListRepository.removeItem(userId, listId, itemId))
+        .then(() => toDoListRepository.removeItem(userId, listId, itemId))
         .catch(err => error = err)
+    })
+
+    afterEach(() => {
+      return toDoListRepository.deleteList(userId, listId)
     })
 
     it('should NOT throw an error', () => {
@@ -306,6 +310,22 @@ describe('toDoListRepository', () => {
 
     it('should NOT throw an error', () => {
         expect(error).to.be.undefined
+    })
+  })
+
+  context('when removing a list', () => {
+    let listId, list
+
+    beforeEach(() => {
+        return toDoListRepository.createEmptyList(userId, "List To Delete")
+        .then(l => listId = l._id) 
+        .then(() => toDoListRepository.deleteList(userId, listId))
+        .then(() => toDoListRepository.getList(userId))
+        .then(l => list = l)
+    })
+
+    it('should delete the list', () => {
+        expect(list).to.be.null
     })
   })
 })

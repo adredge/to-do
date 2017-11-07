@@ -19,10 +19,7 @@ module.exports = {
                 items: []
             })
 
-        return toDoList.save(function (err, savedList) {
-            if (err) return console.error(err)
-            return savedList
-        })
+        return toDoList.save()
     },
 
     addItem(userId, listId, newItemName) {
@@ -74,5 +71,24 @@ module.exports = {
             }
             return toDoList.save().then(() => Item.findByIdAndRemove(itemId).then(() => Promise.resolve()))
         })
+    },
+
+    deleteList(userId, listId) {
+        return ToDoList.findOne({ 'userId': userId, '_id': listId })
+            .exec((err, toDoList) => {
+                if (err) {
+                    console.error("ERROR retrieving list to delete", err)
+                    return Promise.reject()
+                }
+
+                if (!toDoList) {
+                    console.log("To do list not found for removal")
+                    return Promise.resolve()
+                }
+
+                Promise.all(toDoList.items.map(itemId =>
+                    Item.findByIdAndRemove(itemId, () => Promise.resolve())))
+                    .then(toDoList.remove())
+            })
     },
 }

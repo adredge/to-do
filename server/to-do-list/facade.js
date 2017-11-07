@@ -25,5 +25,9 @@ module.exports = {
 
   removeItem(userId, listId, itemId) {
     return toDoListRepository.removeItem(userId, listId, itemId)
+  },
+
+  deleteList(userId, listId) {
+    return toDoListRepository.deleteList(userId, listId)
   }
 }
