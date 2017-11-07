@@ -21,17 +21,16 @@ function addItem(listId, newItemName){
 }
 
 function removeItem(listId, itemId){
-    const data = {listId, itemId}
-    return axios.post('api/removeItem', data).then(res => res.data)
+    return axios.delete(`api/removeItem/${listId}/${itemId}`).then(res => res.data)
 }
 
 function checkItem(itemId, completedAt){
     const data = {itemId, completedAt}
-    return axios.post('api/checkItem', data).then(response => response.data)
+    return axios.put('api/checkItem', data).then(response => response.data)
 }
 
 function uncheckItem(itemId){
-    return axios.post('api/uncheckItem', {itemId})
+    return axios.put('api/uncheckItem', {itemId})
 }
 
 const Client = {getList, checkItem, uncheckItem, addItem, removeItem };

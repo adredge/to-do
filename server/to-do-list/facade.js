@@ -23,8 +23,7 @@ module.exports = {
     return toDoListRepository.addItem(userId, addItemDetails.listId, addItemDetails.newItemName)
   },
 
-  removeItem(userId, removeItemDetails) {
-    console.log('remove', userId, removeItemDetails.listId, removeItemDetails.itemId)
-    return toDoListRepository.removeItem(userId, removeItemDetails.listId, removeItemDetails.itemId)
+  removeItem(userId, listId, itemId) {
+    return toDoListRepository.removeItem(userId, listId, itemId)
   }
 }

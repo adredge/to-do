@@ -44,7 +44,6 @@ class ToDoList extends Component {
         })
     }
 
-
     addItem = () => {
         Client.addItem(this.state.list._id, this.state.addItemName)
         .then(list => {

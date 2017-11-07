@@ -11,13 +11,13 @@ router.post('/createList', (req, res) => {
   return toDoListFacade.createList(req.userId).then(vm => res.json(vm))
 })
 
-router.post('/checkItem', (req,res) => {
+router.put('/checkItem', (req,res) => {
   const itemId = req.body.itemId;
   const completedAt = req.body.completedAt
   return toDoListFacade.checkItem(itemId, completedAt).then(vm => res.json(vm))
 });
 
-router.post('/uncheckItem', (req,res) => {
+router.put('/uncheckItem', (req,res) => {
   const itemId = req.body.itemId;
   return toDoListFacade.uncheckItem(itemId).then(() => res.status(200).end())
 });
@@ -26,8 +26,8 @@ router.post('/addItem', (req, res) => {
   return toDoListFacade.addItem(req.userId, req.body).then(vm => res.json(vm))
 });
 
-router.post('/removeItem', (req, res) => {
-  return toDoListFacade.removeItem(req.userId, req.body).then(vm => res.json(vm))
+router.delete('/removeItem/:listId/:itemId', (req, res) => {
+  return toDoListFacade.removeItem(req.userId, req.params.listId, req.params.itemId).then(vm => res.json(vm))
 });
 
 module.exports = router
