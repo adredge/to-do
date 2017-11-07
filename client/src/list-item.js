@@ -21,8 +21,8 @@ class ListItem extends Component {
     checkItem = () => {
         const completedAt = new Date().toLocaleString()
         Client.checkItem(this.state.item._id, completedAt)
-        .then(updatedItem => {
-            this.setState({item: {...this.state.item, ...updatedItem }})
+         .then(() => {
+            this.setState({item: {...this.state.item, complete: true, completedAt}})
         })
     }
     

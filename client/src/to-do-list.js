@@ -37,9 +37,9 @@ class ToDoList extends Component {
 
     removeItem = (itemId) => {
         Client.removeItem(this.state.list._id, itemId)
-        .then(list => {
+        .then(() => {
             this.setState({
-                list: list
+                list: {...this.state.list, items: this.state.list.items.filter(e => e._id !== itemId)}
             })
         })
     }

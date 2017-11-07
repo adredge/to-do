@@ -100,7 +100,7 @@ describe('toDoListRepository', () => {
   })
 
   context('when checking an item as complete', () => {
-    let listId, savedList, item1Id, returnedItem
+    let listId, savedList, item1Id, response, updatedItem
     const item1Name = "Item 1"
     const item2Name = "Item 2"
     const expectedCompletedAt = new Date().toLocaleString()
@@ -111,28 +111,33 @@ describe('toDoListRepository', () => {
         .then(() => toDoListRepository.addItem(userId, listId, item1Name))
         .then(list => item1Id = list.items[0]._id)
         .then(() => toDoListRepository.addItem(userId, listId, item2Name))
-        .then(() => toDoListRepository.checkItem(item1Id, expectedCompletedAt)
-            .then(i => returnedItem = i))
+        .then(() => toDoListRepository.checkItem(item1Id, expectedCompletedAt))
+        .then(r => response = r)
         .then(() => toDoListRepository.getList(userId))
-        .then(l => savedList = l)
+        .then(l => {
+            savedList = l
+            updatedItem = savedList.items[0]
+        })
     })
 
     afterEach(() => {
       return dbHelper.deleteEntireList(userId, listId)
     })
 
-    it('should return the updated item', () => {
-        expect(returnedItem._id).to.eql(savedList.items[0]._id)
-        expect(returnedItem.completedAt).to.eql(savedList.items[0].completedAt)
-        expect(returnedItem.complete).to.eql(savedList.items[0].complete)
-        expect(returnedItem.name).to.eql(savedList.items[0].name)
+    it('should not return anything but should succeed', () => {
+        expect(response).to.be.undefined
+    })
+
+    it('should update the first item', () => {
+        expect(updatedItem._id).to.eql(item1Id)
+        expect(updatedItem.name).to.eql(item1Name)
     })
 
     it('should mark the completed item as complete', () => {
         expect(savedList.items.length).to.equal(2)
-        expect(savedList.items[0].complete).to.be.true
-        let returnedDate = new Date(savedList.items[0].completedAt).toLocaleString()
-        expect(returnedDate).to.equal(expectedCompletedAt)
+        expect(updatedItem.complete).to.be.true
+        let actualCompletedAt = new Date(updatedItem.completedAt).toLocaleString()
+        expect(actualCompletedAt).to.equal(expectedCompletedAt)
     })
 
     it('should NOT mark the other item as complete', () => {
@@ -162,7 +167,7 @@ describe('toDoListRepository', () => {
   })
 
   context('when UNchecking an item', () => {
-    let listId, savedList, item1Id, item2Id, updatedItem
+    let listId, savedList, item1Id, item2Id, response, updatedItem
     const item1Name = "Item 1"
     const item2Name = "Item 2"
     const expectedCompletedAt1 = new Date().toLocaleString()
@@ -178,27 +183,28 @@ describe('toDoListRepository', () => {
         .then(() => toDoListRepository.checkItem(item1Id, expectedCompletedAt1))
         .then(() => toDoListRepository.checkItem(item2Id, expectedCompletedAt2))
         .then(() => toDoListRepository.uncheckItem(item2Id))
-        .then(item => updatedItem = item)
+        .then(r => response = r)
         .then(() => toDoListRepository.getList(userId))
-        .then(l => savedList = l)
+        .then(l => {
+            savedList = l
+            updatedItem = savedList.items[1]
+        })
     })
 
     afterEach(() => {
       return dbHelper.deleteEntireList(userId, listId)
     })
 
-    it('should return the updated item as unchecked', () => {
+    it('should not return anything but should succeed', () => {
+        expect(response).to.be.undefined
+    })
+
+    it('should update the item as unchecked', () => {
+        expect(savedList.items.length).to.equal(2)
         expect(updatedItem._id).to.eql(item2Id)
         expect(updatedItem.completedAt).to.be.null
         expect(updatedItem.complete).to.be.false
         expect(updatedItem.name).to.eql(item2Name)
-    })
-
-    it('should mark the unchecked item as incomplete', () => {
-        expect(savedList.items.length).to.equal(2)
-        expect(savedList.items[1]._id).to.eql(item2Id)
-        expect(savedList.items[1].complete).to.be.false
-        expect(savedList.items[1].completedAt).to.be.null
     })
 
     it('should NOT mark the other item as incomplete', () => {
@@ -231,7 +237,7 @@ describe('toDoListRepository', () => {
   })
 
   context('when removing an item', () => {
-    let listId, item1Id, item2Id, savedList
+    let listId, item1Id, item2Id, response, savedList
     const item1Name = "Item 1"
     const item2Name = "Item 2"
 
@@ -243,6 +249,8 @@ describe('toDoListRepository', () => {
         .then(() => toDoListRepository.addItem(userId, listId, item2Name))
         .then(list => item2Id = list.items[1]._id)
         .then(() => toDoListRepository.removeItem(userId, listId, item1Id)
+        .then(r => response = r)
+        .then(() => toDoListRepository.getList(userId))
         .then(list => savedList = list))
     })
 
@@ -250,7 +258,11 @@ describe('toDoListRepository', () => {
       return dbHelper.deleteEntireList(userId, listId)
     })
 
-    it('should return the list without the removed item', () => {
+    it('should not return anything but should succeed', () => {
+        expect(response).to.be.undefined
+    })
+
+    it('should effectively remove the item from the list', () => {
         expect(savedList.items.indexOf(item1Id)).to.equal(-1)
     })
 

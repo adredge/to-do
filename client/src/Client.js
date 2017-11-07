@@ -21,12 +21,12 @@ function addItem(listId, newItemName){
 }
 
 function removeItem(listId, itemId){
-    return axios.delete(`api/removeItem/${listId}/${itemId}`).then(res => res.data)
+    return axios.delete(`api/removeItem/${listId}/${itemId}`)
 }
 
 function checkItem(itemId, completedAt){
     const data = {itemId, completedAt}
-    return axios.put('api/checkItem', data).then(response => response.data)
+    return axios.put('api/checkItem', data)
 }
 
 function uncheckItem(itemId){

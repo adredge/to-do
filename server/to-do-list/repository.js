@@ -51,7 +51,7 @@ module.exports = {
             if (!item) return Promise.reject('Unable to find item with id ' + itemId)
 
             item.set({ complete: true, completedAt });
-            return item.save().then(() => item).catch(err => console.error("ERROR saving completed item", err))
+            return item.save().then(() => Promise.resolve()).catch(err => console.error("ERROR saving completed item", err))
         })
     },
 
@@ -60,7 +60,7 @@ module.exports = {
             if (!item) return Promise.reject('Unable to find item with id ' + itemId)
 
             item.set({ complete: false, completedAt: null })
-            return item.save().then(() => item).catch(err => console.error("ERROR saving completed item", err))
+            return item.save().then(() => Promise.resolve()).catch(err => console.error("ERROR saving completed item", err))
         })
     },
 
@@ -72,11 +72,7 @@ module.exports = {
             if (itemIndexToRemove > -1) {
                 toDoList.items.splice(itemIndexToRemove, 1);
             }
-            return toDoList.save().then(() => {
-                return Item.findByIdAndRemove(itemId).then(() => {
-                    return ToDoList.findOne({ 'userId': userId, '_id': listId }).then(list => list)
-                })
-            })
+            return toDoList.save().then(() => Item.findByIdAndRemove(itemId).then(() => Promise.resolve()))
         })
     },
 }
